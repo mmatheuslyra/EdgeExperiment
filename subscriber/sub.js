@@ -8,7 +8,8 @@ client.on('message', (topic, message)=>{
     console.log(message)
 })
 
-//TODO: Use multiple subscribers on the same container
+//TODO: Angular charts for each topic considering the different devices
+//TODO: subscribe to all topics
 
 client.on('connect', ()=>{
     client.subscribe('/sbs/devicedata/temperature')
