@@ -8,6 +8,8 @@ client.on('message', (topic, message)=>{
     console.log(message)
 })
 
+//TODO: Use multiple subscribers on the same container
+
 client.on('connect', ()=>{
     client.subscribe(topic)
 })
