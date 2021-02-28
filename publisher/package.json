@@ -1,0 +1,18 @@
+{
+  "name": "publisher",
+  "version": "1.0.0",
+  "description": "MQTT publisher that generates simulated IoT device parameters data.",
+  "main": "pub.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node pub.js"
+  }, "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mmatheuslyra/EdgeExperiment.git"
+  },
+  "author": "Matheus Lyra da Silva",
+  "license": "ISC",
+  "dependencies": {
+    "mqtt": "^4.2.6"
+  }
+}
