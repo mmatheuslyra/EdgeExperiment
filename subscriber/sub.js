@@ -11,5 +11,9 @@ client.on('message', (topic, message)=>{
 //TODO: Use multiple subscribers on the same container
 
 client.on('connect', ()=>{
-    client.subscribe(topic)
+    client.subscribe('/sbs/devicedata/temperature')
+});
+
+client.on('connect', ()=>{
+    client.subscribe('/sbs/devicedata/flow')
 })
