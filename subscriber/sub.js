@@ -1,7 +1,8 @@
 // MQTT subscriber
 var mqtt = require('mqtt')
 var client = mqtt.connect('mqtt://localhost:3000')
-var topic = '/sbs/devicedata/temperature'
+var topics = ['/sbs/devicedata/flow', '/sbs/devicedata/temperature', 
+              '/sbs/devicedata/humidity', '/sbs/devicedata/sound'];
 
 client.on('message', (topic, message)=>{
     message = message.toString()
@@ -12,9 +13,9 @@ client.on('message', (topic, message)=>{
 //TODO: subscribe to all topics
 
 client.on('connect', ()=>{
-    client.subscribe('/sbs/devicedata/temperature')
+    client.subscribe(topics[0])
 });
 
 client.on('connect', ()=>{
-    client.subscribe('/sbs/devicedata/flow')
+    client.subscribe(topics[1])
 })
