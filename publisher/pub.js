@@ -10,7 +10,7 @@ const { Console } = require("console");
 // MQTT publisher
 var mqtt = require('mqtt')
 var client = mqtt.connect('mqtt://localhost:3000')
-var topic = 'LINTANGtest123'
+var topic = ''
 var message = 'Hello World!'
 
 deviceNames = ['SBS01', 'SBS02', 'SBS03', 'SBS04', 'SBS05'];
@@ -90,21 +90,13 @@ function getMessage(option){
     return result
 }
 
-
-// while (true) {
     setInterval(()=>{
     rnd = Math.random();
-    // if (0 <= rnd < 0.20){
-       
         // client.on('connect', ()=>{
-                
                 topic=RandomItem(publishTopic);
                 message = getMessage(topic[1]);                
                 client.publish(topic[0], message)
                 console.log('Message sent!', message);
-
-                
-
         // });
 }, 2000);
 

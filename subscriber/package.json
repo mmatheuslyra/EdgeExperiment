@@ -1,0 +1,12 @@
+{
+  "name": "subscriber",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sub.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node sub.js"
+  },
+  "author": "Matheus Lyra da Silva",
+  "license": "ISC"
+}
