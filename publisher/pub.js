@@ -27,12 +27,12 @@ function RandomItem(array){
 
 // Generate Flow values
 function getFlowValues(){
-    data = JSON.stringify({
-        deviceValue:Random(60, 100), 
-        deviceParameter:'Flow', 
-        deviceId:RandomItem(deviceNames),
-        dateTime:Date.now()
-    });
+    data = {
+        'deviceValue':Random(60, 100), 
+        'deviceParameter':'Flow', 
+        'deviceId':RandomItem(deviceNames),
+        'dateTime':Date.now()
+    };
 
     // console.log(data);
     return data;
@@ -40,12 +40,12 @@ function getFlowValues(){
 
 // Generate Temperature values
 function getTemperatureValues(){
-    data = JSON.stringify({
-        deviceValue:Random(15, 35), 
-        deviceParameter:'Temperature', 
-        deviceId:RandomItem(deviceNames),
-        dateTime:Date.now()
-    });
+    data = {
+        'deviceValue':Random(15, 35), 
+        'deviceParameter':'Temperature', 
+        'deviceId':RandomItem(deviceNames),
+        'dateTime':Date.now()
+    };
 
     // console.log(data);
     return data;
@@ -53,12 +53,12 @@ function getTemperatureValues(){
 
 // Generate Humidity values
 function getHumidityValues(){
-    data = JSON.stringify({
-        deviceValue:Random(50, 90), 
-        deviceParameter:'Humidity', 
-        deviceId:RandomItem(deviceNames),
-        dateTime:Date.now()
-    });
+    data = {
+        'deviceValue':Random(50, 90), 
+        'deviceParameter':'Humidity', 
+        'deviceId':RandomItem(deviceNames),
+        'dateTime':Date.now()
+    };
 
     // console.log(data);
     return data;
@@ -66,12 +66,12 @@ function getHumidityValues(){
 
 // Generate Sound values
 function getSoundValues(){
-    data = JSON.stringify({
-        deviceValue:Random(100, 140), 
-        deviceParameter:'Sound', 
-        deviceId:RandomItem(deviceNames),
-        dateTime:Date.now()
-    });
+    data = {
+        'deviceValue':Random(100, 140), 
+        'deviceParameter':'Sound', 
+        'deviceId':RandomItem(deviceNames),
+        'dateTime':Date.now()
+    };
 
     // console.log(data);
     return data;
@@ -96,7 +96,7 @@ function getMessage(option){
     rnd = Math.random();
         // client.on('connect', ()=>{
                 topic=RandomItem(publishTopic);
-                message = getMessage(topic[1]);                
+                message = JSON.stringify(getMessage(topic[1]));                
                 client.publish(topic[0], message)
                 console.log('Message sent!', message);
         // });

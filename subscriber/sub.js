@@ -5,7 +5,7 @@ var topics = ['/sbs/devicedata/flow', '/sbs/devicedata/temperature',
               '/sbs/devicedata/humidity', '/sbs/devicedata/sound'];
 
 client.on('message', (topic, message)=>{
-    message = message.toString()
+    message = JSON.parse(JSON.stringify(message.toString('utf-8')));
     console.log(message)
 })
 
