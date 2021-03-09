@@ -90,8 +90,6 @@ function getMessage(option){
     return result
 }
 
-    //TODO: Save data in the mongodb database 
-
     setInterval(()=>{
     rnd = Math.random();
         // client.on('connect', ()=>{
