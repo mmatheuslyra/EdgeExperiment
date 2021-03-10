@@ -24,6 +24,9 @@ app.use(cors());
 deviceNames = ['SBS01', 'SBS02', 'SBS03', 'SBS04', 'SBS05'];
 publishTopic = ['Flow','Temperature','Humidity', 'Sound'];
 
+const DeviceModel = require('./Model/reportModel');
+
+
 
 setInterval(()=>{
 
@@ -31,6 +34,20 @@ setInterval(()=>{
     publishTopic.forEach(topic=>{
       axios.get('http://localhost:3001/devices/'+device+'/'+topic) // Request for the dataManeger
         .then(response => {
+
+          const device = new DeviceModel({
+            deviceId:response.data.deviceId,
+            deviceParameter: response.data.deviceParameter,
+            deviceValue: response.data.result[0].average,
+            dateTime:response.data.dateTime
+        });
+
+        device.save().then(result=> {
+          console.log(result);
+        }).catch(err=> {
+            console.log(err.message);
+        });
+
           console.log(response.data);
           // console.log(response.data.url);
           // console.log(response.data.explanation);
@@ -41,6 +58,6 @@ setInterval(()=>{
     });
   });
 
-}, 30000);
+}, 3000);
 
 module.exports = app;

@@ -47,7 +47,8 @@ app.get('/devices/:deviceId/:deviceParameter',(req,res,next)=>{
                           {$group: {_id:null, average: {$avg: '$deviceValue'}}}
     ]).exec().then(result=>{;
         res.status(200).json(({deviceId:req.params.deviceId,
-                               deviceParameter: req.params.deviceParameter, 
+                               deviceParameter: req.params.deviceParameter,
+                               dateTime:Date.now(), 
                                result}));
     }).catch(err=>{
         res.status(404).json(err);
