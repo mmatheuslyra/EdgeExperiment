@@ -19,6 +19,7 @@ app.use(bodyParser.urlencoded({extended: false})); //Receive body requests, the 
 app.use(bodyParser.json());     //The body parser allows the body property inside the requests
 app.use(cors());
 
+// All database
 app.get('/',(req,res,next)=>{
     DeviceModel.find().lean().then(result=>{
         res.status(200).json(result);
@@ -27,9 +28,9 @@ app.get('/',(req,res,next)=>{
     });
 });
 
-// TODO: Ajustar para o deviceid (SBS01) e não o id do banco
+// All from specific device
 app.get('/:deviceId', (req, res, next)=>{
-    DeviceModel.findById(req.params.deviceId).exec().then(doc=>{
+    DeviceModel.find({'deviceId':req.params.deviceId}).exec().then(doc=>{
         res.status(200).json(doc);
     }).catch(err=>{
         res.status(200).json({
@@ -39,18 +40,22 @@ app.get('/:deviceId', (req, res, next)=>{
 });
 
 // TODO: IMPLEMENTAR UMA CHAMADA PARA TODOS OS DEVICES
-// FAZER UM REDUCE EM TODOS OS DEVICES POR TÓPICO
-// Talvez para cada ('SBS01', 'SBS02', 'SBS03', 'SBS04', 'SBS05')
-// calcular o menor, maior e média (flow, humidity, sound and temperature)
 // Considerar limpar o registro da Edge de tempos em tempos
-app.get('/devices',(req,res,next)=>{
-    DeviceModel.find().lean().then(result=>{
-        res.status(200).json(result);
+app.get('/devices/:deviceId/:deviceParameter',(req,res,next)=>{
+
+    DeviceModel.aggregate([{$match:{'deviceId':req.params.deviceId, 
+                            'deviceParameter':req.params.deviceParameter}},
+                          {$group: {_id:null, average: {$avg: '$deviceValue'}}}
+    ]).exec().then(result=>{
+        res.status(200).json({deviceId:req.params.deviceId,
+                              deviceParameter: req.params.deviceParameter,
+                            result});
     }).catch(err=>{
         res.status(404).json(err);
     });
-});
 
+   
+});
 
 
 app.post('/',(req, res, next)=>{

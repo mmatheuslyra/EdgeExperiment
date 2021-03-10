@@ -21,6 +21,10 @@ app.use(cors());
 //TODO: Implement the most reasonable query to the MongoDB IoTBroker database
 //TODO: Considerar de enviar da cloud para a edge o nome de cada device pelo body
 
+deviceNames = ['SBS01', 'SBS02', 'SBS03', 'SBS04', 'SBS05'];
+publishTopic = ['Flow','Temperature','Humidity', 'Sound'];
+
+
 setInterval(()=>{
   axios.get('http://localhost:3001/') // Request for the dataManeger
     .then(response => {
