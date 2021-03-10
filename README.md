@@ -12,3 +12,6 @@ This project intends to emulate and explore an edge computing scenario. Therefor
   * Data Manager: Component responsible for after some computation, send the preprocessed to the cloud client.
   
 * Cloud client: Final component of this scenario. Requests data from the edge services.
+
+
+[Edge Environment Simulator.pdf](https://github.com/mmatheuslyra/EdgeExperiment/files/6112861/Edge.Environment.Simulator.pdf)
