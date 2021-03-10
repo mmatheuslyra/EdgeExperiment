@@ -14,4 +14,4 @@ This project intends to emulate and explore an edge computing scenario. Therefor
 * Cloud client: Final component of this scenario. Requests data from the edge services.
 
 
-![alt text](https://github.com/mmatheuslyra/EdgeExperiment/files/6112861/Edge.Environment.Simulator.pdf)
+![Screenshot](https://github.com/mmatheuslyra/EdgeExperiment/files/6112861/Edge.Environment.Simulator.pdf)
