@@ -15,11 +15,7 @@ app.use(morgan('dev')); //log the operations through the server
 app.use(bodyParser.urlencoded({extended: false})); //Receive body requests, the extend iqual to false means that only suport simple bodies
 app.use(bodyParser.json());     //The body parser allows the body property inside the requests
 app.use(cors());
-// app.use(express.static("./landingPage/"));
 
-
-//TODO: Implement the most reasonable query to the MongoDB IoTBroker database
-//TODO: Considerar de enviar da cloud para a edge o nome de cada device pelo body
 
 deviceNames = ['SBS01', 'SBS02', 'SBS03', 'SBS04', 'SBS05'];
 publishTopic = ['Flow','Temperature','Humidity', 'Sound'];
@@ -27,9 +23,17 @@ publishTopic = ['Flow','Temperature','Humidity', 'Sound'];
 const DeviceModel = require('./Model/reportModel');
 
 
+// This app also can be used to request data from the "cloud" database
+app.get('/',(req,res,next)=>{
+  DeviceModel.find().lean().then(result=>{
+      res.status(200).json(result);
+  }).catch(err=>{
+      res.status(404).json(err);
+  });
+});
 
+// Requests to the dataMenager API
 setInterval(()=>{
-
   deviceNames.forEach(device => {
     publishTopic.forEach(topic=>{
       axios.get('http://localhost:3001/devices/'+device+'/'+topic) // Request for the dataManeger
@@ -58,6 +62,6 @@ setInterval(()=>{
     });
   });
 
-}, 3000);
+}, 30000);
 
 module.exports = app;
