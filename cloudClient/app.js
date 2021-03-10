@@ -26,15 +26,21 @@ publishTopic = ['Flow','Temperature','Humidity', 'Sound'];
 
 
 setInterval(()=>{
-  axios.get('http://localhost:3001/') // Request for the dataManeger
-    .then(response => {
-      console.log(response.data);
-      // console.log(response.data.url);
-      // console.log(response.data.explanation);
-    })
-    .catch(error => {
-      console.log(error);
+
+  deviceNames.forEach(device => {
+    publishTopic.forEach(topic=>{
+      axios.get('http://localhost:3001/devices/'+device+'/'+topic) // Request for the dataManeger
+        .then(response => {
+          console.log(response.data);
+          // console.log(response.data.url);
+          // console.log(response.data.explanation);
+        })
+        .catch(error => {
+          console.log(error);
+      });
+    });
   });
+
 }, 30000);
 
 module.exports = app;

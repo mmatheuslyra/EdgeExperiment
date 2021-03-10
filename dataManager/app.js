@@ -39,22 +39,19 @@ app.get('/:deviceId', (req, res, next)=>{
     });
 });
 
-// TODO: IMPLEMENTAR UMA CHAMADA PARA TODOS OS DEVICES
-// Considerar limpar o registro da Edge de tempos em tempos
+// Return the avarega value for the requested device and topic 
 app.get('/devices/:deviceId/:deviceParameter',(req,res,next)=>{
 
     DeviceModel.aggregate([{$match:{'deviceId':req.params.deviceId, 
                             'deviceParameter':req.params.deviceParameter}},
                           {$group: {_id:null, average: {$avg: '$deviceValue'}}}
-    ]).exec().then(result=>{
-        res.status(200).json({deviceId:req.params.deviceId,
-                              deviceParameter: req.params.deviceParameter,
-                            result});
+    ]).exec().then(result=>{;
+        res.status(200).json(({deviceId:req.params.deviceId,
+                               deviceParameter: req.params.deviceParameter, 
+                               result}));
     }).catch(err=>{
         res.status(404).json(err);
-    });
-
-   
+    });   
 });
 
 
