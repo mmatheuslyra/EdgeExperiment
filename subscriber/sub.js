@@ -30,7 +30,7 @@ function saveCsv (file, message){
         }else{
             converter.json2csv(JSON.parse(message), json2csvCallback);
         }
-    })
+    });
 }
 
 client.on('message', (topic, message)=>{
@@ -53,10 +53,7 @@ client.on('message', (topic, message)=>{
         if(err) throw (err);
         console.log('MySQL Saved InsertId');
     });
-
-
-})
-
+});
 
 client.on('connect', ()=>{
     client.subscribe(topics[0])
@@ -64,4 +61,4 @@ client.on('connect', ()=>{
 
 client.on('connect', ()=>{
     client.subscribe(topics[1])
-})
+});
