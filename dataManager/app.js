@@ -39,7 +39,7 @@ app.get('/:deviceId', (req, res, next)=>{
     });
 });
 
-// Return the avarega value for the requested device and topic 
+// Return the avarege for an specific device and topic 
 app.get('/devices/:deviceId/:deviceParameter',(req,res,next)=>{
 
     DeviceModel.aggregate([{$match:{'deviceId':req.params.deviceId, 

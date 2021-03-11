@@ -6,13 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node pub.js"
-  }, "repository": {
+  },
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/mmatheuslyra/EdgeExperiment.git"
   },
   "author": "Matheus Lyra da Silva",
   "license": "ISC",
   "dependencies": {
+    "csv-writer": "^1.6.0",
     "mqtt": "^4.2.6"
   }
 }
