@@ -6,6 +6,7 @@
 */
 
 const { Console } = require("console");
+var dateFormat = require('dateformat');
 
 // MQTT publisher
 var mqtt = require('mqtt')
@@ -31,7 +32,7 @@ function getFlowValues(){
         'deviceValue':Random(60, 100), 
         'deviceParameter':'Flow', 
         'deviceId':RandomItem(deviceNames),
-        'dateTime':Date.now()
+        'dateTime':dateFormat(new Date(), "yyyy-mm-dd h:MM:ss")
     };
 
     // console.log(data);
@@ -44,7 +45,7 @@ function getTemperatureValues(){
         'deviceValue':Random(15, 35), 
         'deviceParameter':'Temperature', 
         'deviceId':RandomItem(deviceNames),
-        'dateTime':Date.now()
+        'dateTime':dateFormat(new Date(), "yyyy-mm-dd h:MM:ss")
     };
 
     // console.log(data);
@@ -57,7 +58,7 @@ function getHumidityValues(){
         'deviceValue':Random(50, 90), 
         'deviceParameter':'Humidity', 
         'deviceId':RandomItem(deviceNames),
-        'dateTime':Date.now()
+        'dateTime':dateFormat(new Date(), "yyyy-mm-dd h:MM:ss")
     };
 
     // console.log(data);
@@ -70,7 +71,7 @@ function getSoundValues(){
         'deviceValue':Random(100, 140), 
         'deviceParameter':'Sound', 
         'deviceId':RandomItem(deviceNames),
-        'dateTime':Date.now()
+        'dateTime':dateFormat(new Date(), "yyyy-mm-dd h:MM:ss")
     };
 
     // console.log(data);
