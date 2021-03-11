@@ -5,6 +5,10 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser') 
 const axios = require('axios');
 const mongoose = require('mongoose'); 
+const mysql = require('mysql');
+
+//Defining MySQL connection for Grafana integration
+const db = require('./mysqlconnection');
 
 //MongoDB connection
 mongoose.connect('mongodb://localhost:27017/egdeReduce').then(() => console.log('MongoDB Connected!')).catch(err =>{
@@ -46,15 +50,27 @@ setInterval(()=>{
             dateTime:response.data.dateTime
         });
 
+        // MongoDB saving
         device.save().then(result=> {
           console.log(result);
         }).catch(err=> {
             console.log(err.message);
         });
 
+        // MySQL saving
+        let sql = 'INSERT INTO cloudClient VALUES (null,?,?,?,?)';
+        let deviceId = response.data.deviceId;
+        let deviceParameter = response.data.deviceParameter;
+        let deviceValueAvarage = Number((response.data.result[0].average).toFixed(3));
+        let dateTime = response.data.dateTime;
+    
+        // console.log(deviceValue + ' ' + deviceParameter  + ' ' + deviceId + ' ' + dateTime);
+        db.query(sql, [deviceValueAvarage, deviceParameter, deviceId, dateTime], (err, result)=>{ // salvando o histórico de pedidos dentro do MySQL
+            if(err) throw (err);
+            console.log('MySQL Saved InsertId');
+        });
+
           console.log(response.data);
-          // console.log(response.data.url);
-          // console.log(response.data.explanation);
         })
         .catch(error => {
           console.log(error);
@@ -62,6 +78,6 @@ setInterval(()=>{
     });
   });
 
-}, 30000);
+}, 3000);
 
 module.exports = app;

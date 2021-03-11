@@ -4,6 +4,7 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser') 
 const mongoose = require('mongoose');
+var dateFormat = require('dateformat');
 
 //This app redirect specific routes for the proper files
 const DeviceModel = require('./Model/deviceModel');
@@ -48,7 +49,7 @@ app.get('/devices/:deviceId/:deviceParameter',(req,res,next)=>{
     ]).exec().then(result=>{;
         res.status(200).json(({deviceId:req.params.deviceId,
                                deviceParameter: req.params.deviceParameter,
-                               dateTime:Date.now(), 
+                               dateTime:dateFormat(new Date(), "yyyy-mm-dd h:MM:ss"), 
                                result}));
     }).catch(err=>{
         res.status(404).json(err);

@@ -1,6 +1,6 @@
 // Mosca MQTT broker
 var mosca = require('mosca')
-var settings = {port: 3000}
+var settings = {port: 3005}
 var broker = new mosca.Server(settings)
 const mongoose = require('mongoose'); 
 

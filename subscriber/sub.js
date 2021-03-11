@@ -2,7 +2,7 @@
 const converter = require('json-2-csv');
 const fs = require('fs');
 var mqtt = require('mqtt')
-var client = mqtt.connect('mqtt://localhost:3000')
+var client = mqtt.connect('mqtt://localhost:3005')
 const mysql = require('mysql');
 var topics = ['/sbs/devicedata/flow', '/sbs/devicedata/temperature', 
               '/sbs/devicedata/humidity', '/sbs/devicedata/sound'];
