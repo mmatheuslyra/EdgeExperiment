@@ -1,8 +1,8 @@
 const http = require('http');
-const app = require("./app");
+const dataManager = require("./dataManager");
 
 //Listening for the cloud client requests
-const server = http.createServer(app);
+const server = http.createServer(dataManager);
 const port = process.env.PORT || 3001;
 
 server.listen(port);

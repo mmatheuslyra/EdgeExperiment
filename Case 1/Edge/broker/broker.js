@@ -26,7 +26,10 @@ function parsePayload (payload) {
   
     return payload
   }
-  
+
+// broker.on('connect',()=>{
+//   console.log();
+// })
 
 broker.on('published', (packet)=>{
     // message =  JSON.stringify(packet.payload.toString());

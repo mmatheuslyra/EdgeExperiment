@@ -99,5 +99,5 @@ function getMessage(option){
                 client.publish(topic[0], message)
                 console.log('Message sent!', JSON.parse(message));
         // });
-}, 2000);
+}, 5000);
 

@@ -62,3 +62,7 @@ client.on('connect', ()=>{
 client.on('connect', ()=>{
     client.subscribe(topics[1])
 });
+
+
+// TORNAR PROCESSO DE INSCRIÇÃO DINAMICO
+// TER VETOR PADRÃO MAS QUE PODE SER ALTERADO CONFORME MENSAGEM DA CLOUD
