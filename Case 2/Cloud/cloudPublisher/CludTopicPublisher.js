@@ -22,5 +22,22 @@ client.on('connect', ()=>{
         message = JSON.stringify(data);
         client.publish(topic, message)
         console.log('Message sent!', JSON.parse(message));
-    }, 5000)
-})
+    }, 5000);
+
+    // setInterval(()=>{
+    //     message = JSON.stringify({message: 'ERROR MONITORING TEST'});
+    //     client.publish('error', message)
+    //     console.log('Message sent!', JSON.parse(message));
+    // }, 5000);
+    // setInterval(()=>{
+    //     client.publish('error', 'Hello Edge')
+    //     console.log('Message sent!', 'Hello Edge')
+    // }, 5000)
+});
+
+// client.on('connect', ()=>{
+//     setInterval(()=>{
+//         client.publish('error', 'Hello Edge')
+//         console.log('Message sent!', 'Hello Edge')
+//     }, 5000)
+// })

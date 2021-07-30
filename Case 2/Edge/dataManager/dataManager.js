@@ -57,7 +57,6 @@ app.get('/devices/:deviceId/:deviceParameter',(req,res,next)=>{
     });   
 });
 
-
 app.post('/',(req, res, next)=>{
     res.status(200).json({
         message: 'Adress not valid'
@@ -80,11 +79,7 @@ app.use((error, req, res, next)=>{
     });
 });
 
-
-
-
-// ADICIONAR TIMER E ENVIAR AS MENSAGENS E REDUÇÃO A CADA PERÍODO
-
+// Sends messages to the CloudServer from time to time
 deviceNames = ['SBS01', 'SBS02', 'SBS03', 'SBS04', 'SBS05'];
 publishTopic = ['Flow','Temperature','Humidity', 'Sound'];
 
@@ -92,15 +87,9 @@ publishTopic = ['Flow','Temperature','Humidity', 'Sound'];
 setInterval(()=>{
     deviceNames.forEach(device => {
       publishTopic.forEach(topic=>{
-        axios.post('http://localhost:3010') // Send message to Cloud server    ajustar endpoit da cloud
+        axios.post('http://localhost:3020') // Send message to Cloud server    ajustar endpoit da cloud
           .then(response => {
-            
-            // VERIFICAR SE FUNCIONA ESSA UNIÃO DOS CÓDIGOS    
-
-            // Requisitando pra si mesmo as médias de valores e enviando (TESTAR)
-
             axios.get('http://localhost:3001/devices/:'+device+'/:'+topic,(req,res,next)=>{
-
                 DeviceModel.aggregate([{$match:{'deviceId':req.params.deviceId, 
                                         'deviceParameter':req.params.deviceParameter}},
                                       {$group: {_id:null, average: {$avg: '$deviceValue'}}}
@@ -113,7 +102,6 @@ setInterval(()=>{
                     res.status(404).json(err);
                 });   
             });
-
             console.log(response.data);
           })
           .catch(error => {
@@ -123,4 +111,5 @@ setInterval(()=>{
     });
   
   }, 30000);
+  
 module.exports = app;

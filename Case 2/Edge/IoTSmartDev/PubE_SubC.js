@@ -3,7 +3,7 @@ var mqtt = require('mqtt')
 // const { Console } = require('node:console')
 var EdgeClient = mqtt.connect('mqtt://localhost:3005')
 var CloudClient = mqtt.connect('mqtt://localhost:3010')
-
+const CloudTopic = ['monitoringOrder'];
 
 // CRIAR ARRAY COM MENSAGEM DA NUVEM E PASSAR NA MENSAGEM PARA OS SUBSCRIBERS DA EDGE
 // VER COMO SE INSCREVER EM VÁRIOS TÓPICOS DE ARRAY 
@@ -22,6 +22,10 @@ var EdgeMessage = {
     'deviceParameter':'I am Alive'
 }
 
+CloudClient.on('connect',()=>{
+    CloudClient.subscribe(CloudTopic); 
+})
+
 EdgeClient.on('connect', (ƒ)=>{
     setInterval(()=>{
         EdgeClient.publish(EdgeTopic, JSON.stringify(EdgeMessage))
@@ -30,13 +34,39 @@ EdgeClient.on('connect', (ƒ)=>{
 })
 
 // MQTT Cloud subscriber
-var CloudTopic = 'monitoringOrder'
+// var CloudTopic = 'monitoringOrder'
 
 CloudClient.on('message', (topic, message)=>{
     message = message.toString()
-    console.log(JSON.parse(message));
+    let newMessage = JSON.parse(message);
+    // console.log(newMessage);
+
+    if (topic == 'monitoringOrder'){
+        // console.log(newMessage.monitoringOrder.words);
+
+        newMessage.monitoringOrder.words.forEach((element, index) => {
+            if(!CloudTopic.includes(element)){
+                // console.log(element);
+                CloudTopic.push(element);
+                // CloudClient.subscribe(element);
+            }    
+            });
+
+        CloudTopic.forEach(function (element, indice) {
+            CloudClient.subscribe(element);
+        });
+    }
 })
 
-CloudClient.on('connect', ()=>{
-    CloudClient.subscribe(CloudTopic)
-})
+
+
+// CloudClient.on('connect', (topic)=>{
+    // console.log('Edge subscriber linked to cloud' + topic);
+    // CloudClient.subscribe(CloudTopic);
+    // if(!CloudTopic.includes(element)){
+//         CloudTopic.forEach(function (element, indice) {
+//             CloudClient.subscribe(element);
+//         });
+//     }
+// })
+

@@ -5,7 +5,7 @@
   "main": "pub.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node pub.js"
+    "start": "node CludTopicPublisher.js"
   },
   "repository": {
     "type": "git",
