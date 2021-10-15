@@ -40,9 +40,11 @@ CloudClient.on('message', (topic, message)=>{
     message = message.toString()
     let newMessage = JSON.parse(message);
     // console.log(newMessage);
+    let newmessage = JSON.parse(JSON.stringify(message.toString('utf-8')));
+    console.log(JSON.parse(newmessage));
 
     if (topic == 'monitoringOrder'){
-        // console.log(newMessage.monitoringOrder.words);
+        //  console.log(newMessage.monitoringOrder.words);
 
         newMessage.monitoringOrder.words.forEach((element, index) => {
             if(!CloudTopic.includes(element)){
@@ -54,16 +56,30 @@ CloudClient.on('message', (topic, message)=>{
 
         CloudTopic.forEach(function (element, indice) {
             CloudClient.subscribe(element);
+            EdgeClient.subscribe(element);
         });
     }
 })
 
 
+EdgeClient.on('message', (topic, message)=>{
+    let newmessage = JSON.parse(JSON.stringify(message.toString('utf-8')));
+    console.log(JSON.parse(newmessage));
+    // message = JSON.parse(JSON.stringify(message.toString('utf-8')));
+    // let file = 'readings/readings.csv';
+
+    // saveCsv(file, message);
+    
+    // let newMessage = JSON.parse(message);
+    // console.log(newMessage);
+});
+
+
 
 // CloudClient.on('connect', (topic)=>{
-    // console.log('Edge subscriber linked to cloud' + topic);
-    // CloudClient.subscribe(CloudTopic);
-    // if(!CloudTopic.includes(element)){
+//     console.log('Edge subscriber linked to cloud' + topic);
+//     CloudClient.subscribe(CloudTopic);
+//     if(!CloudTopic.includes(element)){
 //         CloudTopic.forEach(function (element, indice) {
 //             CloudClient.subscribe(element);
 //         });

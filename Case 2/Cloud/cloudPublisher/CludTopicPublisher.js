@@ -10,6 +10,9 @@ var client = mqtt.connect('mqtt://localhost:3010')
 var topic = 'monitoringOrder'
 var message = 'Hello World!'
 
+// '/sbs/devicedata/flow', '/sbs/devicedata/temperature', '/sbs/devicedata/humidity', '/sbs/devicedata/sound'
+
+
 data = {
     'monitoringOrder':{'words':[
         'Overload', 'error'
@@ -24,11 +27,11 @@ client.on('connect', ()=>{
         console.log('Message sent!', JSON.parse(message));
     }, 5000);
 
-    // setInterval(()=>{
-    //     message = JSON.stringify({message: 'ERROR MONITORING TEST'});
-    //     client.publish('error', message)
-    //     console.log('Message sent!', JSON.parse(message));
-    // }, 5000);
+    setInterval(()=>{
+        message = JSON.stringify({message: 'ERROR MONITORING TEST'});
+        client.publish('error', message)
+        console.log('Message sent!', JSON.parse(message));
+    }, 5000);
     // setInterval(()=>{
     //     client.publish('error', 'Hello Edge')
     //     console.log('Message sent!', 'Hello Edge')

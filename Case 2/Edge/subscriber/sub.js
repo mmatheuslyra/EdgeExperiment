@@ -38,8 +38,9 @@ client.on('message', (topic, message)=>{
     let file = 'readings/readings.csv';
 
     saveCsv(file, message);
-
+    
     let newMessage = JSON.parse(message);
+    console.log(newMessage);
 
     //Data saved in a MySQL database due to the non free integration of MongoDB with Grafana
     let sql = 'INSERT INTO subscriber VALUES (null,?,?,?,?)';
