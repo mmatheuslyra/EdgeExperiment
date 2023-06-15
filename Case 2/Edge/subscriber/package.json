@@ -12,6 +12,7 @@
   "dependencies": {
     "csv-writer": "^1.6.0",
     "json-2-csv": "^3.10.2",
+    "mqtt": "^4.2.6",
     "mysql": "^2.18.1"
   }
 }

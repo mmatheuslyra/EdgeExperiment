@@ -5,13 +5,18 @@ var broker = new mosca.Server(settings)
 const mongoose = require('mongoose'); 
 
 //MongoDB connection
-mongoose.connect('mongodb://localhost:27017/iotBroker').then(() => console.log('MongoDB Connected!')).catch(err =>{
-    console.log(err);
+// mongoose.connect('mongodb://localhost:27017/iotBroker').then(() => console.log('MongoDB Connected!')).catch(err =>{
+//     console.log(err);
+// });
+
+broker.on('ready', async ()=>{
+  await mongoose.connect('mongodb://mongodb-myapp:27017/iotBroker').then(() => console.log('MongoDB Connected!')).catch(err =>{
+      console.log(err);
+  });
+
+    console.log('Broker is ready!')
 });
 
-// broker.on('ready', ()=>{
-//     console.log('Broker is ready!')
-// });
 broker.on('clientConnected', function(client) {
   console.log('client connected', client.id);
 });

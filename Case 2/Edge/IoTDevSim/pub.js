@@ -10,7 +10,7 @@ var dateFormat = require('dateformat');
 
 // MQTT publisher
 var mqtt = require('mqtt')
-var client = mqtt.connect('mqtt://localhost:3005')
+var client = mqtt.connect('mqtt://edgeBroker:3005')
 var topic = ''
 var message = 'Hello World!'
 

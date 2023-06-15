@@ -2,13 +2,15 @@
 const converter = require('json-2-csv');
 const fs = require('fs');
 var mqtt = require('mqtt')
-var client = mqtt.connect('mqtt://localhost:3005')
-const mysql = require('mysql');
+// var client = mqtt.connect('mqtt://localhost:3005')
+// const mysql = require('mysql');
+
+var client = mqtt.connect('mqtt://edgeBroker:3005')
 var topics = ['/sbs/devicedata/flow', '/sbs/devicedata/temperature', 
               '/sbs/devicedata/humidity', '/sbs/devicedata/sound'];
 
 //Defining MySQL connection for Grafana integration
-const db = require('./mysqlconnection');
+// const db = require('./mysqlconnection');
 
 function saveCsv (file, message){
     let json2csvCallback = function (err, csv) {
@@ -18,7 +20,7 @@ function saveCsv (file, message){
                 if (err) {
                   console.log('Some error occured - file either not saved or corrupted file saved.');
                 } else {
-                  console.log('It\'s saved!');
+                  console.log('Appended on CSV file');
                 }
           });
     };
@@ -42,18 +44,18 @@ client.on('message', (topic, message)=>{
     let newMessage = JSON.parse(message);
     console.log(newMessage);
 
-    //Data saved in a MySQL database due to the non free integration of MongoDB with Grafana
-    let sql = 'INSERT INTO subscriber VALUES (null,?,?,?,?)';
-    let deviceId = newMessage.deviceId;
-    let deviceParameter = newMessage.deviceParameter;
-    let deviceValue = Number((newMessage.deviceValue).toFixed(3));
-    let dateTime = newMessage.dateTime;
+    // //Data saved in a MySQL database due to the non free integration of MongoDB with Grafana
+    // let sql = 'INSERT INTO subscriber VALUES (null,?,?,?,?)';
+    // let deviceId = newMessage.deviceId;
+    // let deviceParameter = newMessage.deviceParameter;
+    // let deviceValue = Number((newMessage.deviceValue).toFixed(3));
+    // let dateTime = newMessage.dateTime;
 
-    // console.log(deviceValue + ' ' + deviceParameter  + ' ' + deviceId + ' ' + dateTime);
-    db.query(sql, [deviceValue, deviceParameter, deviceId, dateTime], (err, result)=>{ // salvando o histórico de pedidos dentro do MySQL
-        if(err) throw (err);
-        console.log('MySQL Saved InsertId');
-    });
+    // // console.log(deviceValue + ' ' + deviceParameter  + ' ' + deviceId + ' ' + dateTime);
+    // db.query(sql, [deviceValue, deviceParameter, deviceId, dateTime], (err, result)=>{ // salvando o histórico de pedidos dentro do MySQL
+    //     if(err) throw (err);
+    //     console.log('MySQL Saved InsertId');
+    // });
 });
 
 client.on('connect', ()=>{
