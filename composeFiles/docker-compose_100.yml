@@ -1,0 +1,968 @@
+version: '3.7'
+services:
+  cloudBroker:
+    image: cloud_broker
+    container_name: cloud_broker
+    build: 
+      "./Cloud/Broker"
+    ports:
+      - "3010:3010"
+  cloudClient:
+    image: cloud_client
+    container_name: cloud_client
+    build: 
+      "./Cloud/cloudClient"
+    ports:
+      - "3002:3002"
+  cloudPublisher:
+    image: cloud_publisher
+    container_name: cloud_publisher
+    build: 
+      "./Cloud/cloudPublisher"
+  cloudServer:
+    image: cloud_server
+    container_name: cloud_server
+    build: 
+      "./Cloud/cloudServer"
+    ports:
+      - "3020:3020"
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+    environment:
+      WAIT_HOSTS: mongodb:27017
+  edgeBroker:
+    image: edge_broker
+    container_name: edge_broker
+    build: 
+      "./Edge/Broker"
+    ports:
+      - "3005:3005"
+  edgeDataManager:
+    image: edge_data_manager
+    container_name: edge_data_manager
+    build: 
+      "./Edge/DataManager"
+    depends_on:
+      - mongodb
+      - cloudServer
+  edgeIoTDevSim_1:
+    image: edge_iot_dev_sim_1
+    container_name: edge_iot_dev_sim_1
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_2:
+    image: edge_iot_dev_sim_2
+    container_name: edge_iot_dev_sim_2
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_3:
+    image: edge_iot_dev_sim_3
+    container_name: edge_iot_dev_sim_3
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_4:
+    image: edge_iot_dev_sim_4
+    container_name: edge_iot_dev_sim_4
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_5:
+    image: edge_iot_dev_sim_5
+    container_name: edge_iot_dev_sim_5
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_6:
+    image: edge_iot_dev_sim_6
+    container_name: edge_iot_dev_sim_6
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_7:
+    image: edge_iot_dev_sim_7
+    container_name: edge_iot_dev_sim_7
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_8:
+    image: edge_iot_dev_sim_8
+    container_name: edge_iot_dev_sim_8
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_9:
+    image: edge_iot_dev_sim_9
+    container_name: edge_iot_dev_sim_9
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_10:
+    image: edge_iot_dev_sim_10
+    container_name: edge_iot_dev_sim_10
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_11:
+    image: edge_iot_dev_sim_11
+    container_name: edge_iot_dev_sim_11
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_12:
+    image: edge_iot_dev_sim_12
+    container_name: edge_iot_dev_sim_12
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_13:
+    image: edge_iot_dev_sim_13
+    container_name: edge_iot_dev_sim_13
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_14:
+    image: edge_iot_dev_sim_14
+    container_name: edge_iot_dev_sim_14
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_15:
+    image: edge_iot_dev_sim_15
+    container_name: edge_iot_dev_sim_15
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_16:
+    image: edge_iot_dev_sim_16
+    container_name: edge_iot_dev_sim_16
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_17:
+    image: edge_iot_dev_sim_17
+    container_name: edge_iot_dev_sim_17
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_18:
+    image: edge_iot_dev_sim_18
+    container_name: edge_iot_dev_sim_18
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_19:
+    image: edge_iot_dev_sim_19
+    container_name: edge_iot_dev_sim_19
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_20:
+    image: edge_iot_dev_sim_20
+    container_name: edge_iot_dev_sim_20
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_21:
+    image: edge_iot_dev_sim_21
+    container_name: edge_iot_dev_sim_21
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_22:
+    image: edge_iot_dev_sim_22
+    container_name: edge_iot_dev_sim_22
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_23:
+    image: edge_iot_dev_sim_23
+    container_name: edge_iot_dev_sim_23
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_24:
+    image: edge_iot_dev_sim_24
+    container_name: edge_iot_dev_sim_24
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_25:
+    image: edge_iot_dev_sim_25
+    container_name: edge_iot_dev_sim_25
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_26:
+    image: edge_iot_dev_sim_26
+    container_name: edge_iot_dev_sim_26
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_27:
+    image: edge_iot_dev_sim_27
+    container_name: edge_iot_dev_sim_27
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_28:
+    image: edge_iot_dev_sim_28
+    container_name: edge_iot_dev_sim_28
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_29:
+    image: edge_iot_dev_sim_29
+    container_name: edge_iot_dev_sim_29
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_30:
+    image: edge_iot_dev_sim_30
+    container_name: edge_iot_dev_sim_30
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_31:
+    image: edge_iot_dev_sim_31
+    container_name: edge_iot_dev_sim_31
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_32:
+    image: edge_iot_dev_sim_32
+    container_name: edge_iot_dev_sim_32
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_33:
+    image: edge_iot_dev_sim_33
+    container_name: edge_iot_dev_sim_33
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_34:
+    image: edge_iot_dev_sim_34
+    container_name: edge_iot_dev_sim_34
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_35:
+    image: edge_iot_dev_sim_35
+    container_name: edge_iot_dev_sim_35
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_36:
+    image: edge_iot_dev_sim_36
+    container_name: edge_iot_dev_sim_36
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_37:
+    image: edge_iot_dev_sim_37
+    container_name: edge_iot_dev_sim_37
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_38:
+    image: edge_iot_dev_sim_38
+    container_name: edge_iot_dev_sim_38
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_39:
+    image: edge_iot_dev_sim_39
+    container_name: edge_iot_dev_sim_39
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_40:
+    image: edge_iot_dev_sim_40
+    container_name: edge_iot_dev_sim_40
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_41:
+    image: edge_iot_dev_sim_41
+    container_name: edge_iot_dev_sim_41
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_42:
+    image: edge_iot_dev_sim_42
+    container_name: edge_iot_dev_sim_42
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_43:
+    image: edge_iot_dev_sim_43
+    container_name: edge_iot_dev_sim_43
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_44:
+    image: edge_iot_dev_sim_44
+    container_name: edge_iot_dev_sim_44
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_45:
+    image: edge_iot_dev_sim_45
+    container_name: edge_iot_dev_sim_45
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_46:
+    image: edge_iot_dev_sim_46
+    container_name: edge_iot_dev_sim_46
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_47:
+    image: edge_iot_dev_sim_47
+    container_name: edge_iot_dev_sim_47
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_48:
+    image: edge_iot_dev_sim_48
+    container_name: edge_iot_dev_sim_48
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_49:
+    image: edge_iot_dev_sim_49
+    container_name: edge_iot_dev_sim_49
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_50:
+    image: edge_iot_dev_sim_50
+    container_name: edge_iot_dev_sim_50
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_51:
+    image: edge_iot_dev_sim_51
+    container_name: edge_iot_dev_sim_51
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_52:
+    image: edge_iot_dev_sim_52
+    container_name: edge_iot_dev_sim_52
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_53:
+    image: edge_iot_dev_sim_53
+    container_name: edge_iot_dev_sim_53
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_54:
+    image: edge_iot_dev_sim_54
+    container_name: edge_iot_dev_sim_54
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_55:
+    image: edge_iot_dev_sim_55
+    container_name: edge_iot_dev_sim_55
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_56:
+    image: edge_iot_dev_sim_56
+    container_name: edge_iot_dev_sim_56
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_57:
+    image: edge_iot_dev_sim_57
+    container_name: edge_iot_dev_sim_57
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_58:
+    image: edge_iot_dev_sim_58
+    container_name: edge_iot_dev_sim_58
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_59:
+    image: edge_iot_dev_sim_59
+    container_name: edge_iot_dev_sim_59
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_60:
+    image: edge_iot_dev_sim_60
+    container_name: edge_iot_dev_sim_60
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_61:
+    image: edge_iot_dev_sim_61
+    container_name: edge_iot_dev_sim_61
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_62:
+    image: edge_iot_dev_sim_62
+    container_name: edge_iot_dev_sim_62
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_63:
+    image: edge_iot_dev_sim_63
+    container_name: edge_iot_dev_sim_63
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_64:
+    image: edge_iot_dev_sim_64
+    container_name: edge_iot_dev_sim_64
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_65:
+    image: edge_iot_dev_sim_65
+    container_name: edge_iot_dev_sim_65
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_66:
+    image: edge_iot_dev_sim_66
+    container_name: edge_iot_dev_sim_66
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_67:
+    image: edge_iot_dev_sim_67
+    container_name: edge_iot_dev_sim_67
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_68:
+    image: edge_iot_dev_sim_68
+    container_name: edge_iot_dev_sim_68
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_69:
+    image: edge_iot_dev_sim_69
+    container_name: edge_iot_dev_sim_69
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_70:
+    image: edge_iot_dev_sim_70
+    container_name: edge_iot_dev_sim_70
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_71:
+    image: edge_iot_dev_sim_71
+    container_name: edge_iot_dev_sim_71
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_72:
+    image: edge_iot_dev_sim_72
+    container_name: edge_iot_dev_sim_72
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_73:
+    image: edge_iot_dev_sim_73
+    container_name: edge_iot_dev_sim_73
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_74:
+    image: edge_iot_dev_sim_74
+    container_name: edge_iot_dev_sim_74
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_75:
+    image: edge_iot_dev_sim_75
+    container_name: edge_iot_dev_sim_75
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_76:
+    image: edge_iot_dev_sim_76
+    container_name: edge_iot_dev_sim_76
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_77:
+    image: edge_iot_dev_sim_77
+    container_name: edge_iot_dev_sim_77
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_78:
+    image: edge_iot_dev_sim_78
+    container_name: edge_iot_dev_sim_78
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_79:
+    image: edge_iot_dev_sim_79
+    container_name: edge_iot_dev_sim_79
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_80:
+    image: edge_iot_dev_sim_80
+    container_name: edge_iot_dev_sim_80
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_81:
+    image: edge_iot_dev_sim_81
+    container_name: edge_iot_dev_sim_81
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_82:
+    image: edge_iot_dev_sim_82
+    container_name: edge_iot_dev_sim_82
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_83:
+    image: edge_iot_dev_sim_83
+    container_name: edge_iot_dev_sim_83
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_84:
+    image: edge_iot_dev_sim_84
+    container_name: edge_iot_dev_sim_84
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_85:
+    image: edge_iot_dev_sim_85
+    container_name: edge_iot_dev_sim_85
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_86:
+    image: edge_iot_dev_sim_86
+    container_name: edge_iot_dev_sim_86
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_87:
+    image: edge_iot_dev_sim_87
+    container_name: edge_iot_dev_sim_87
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_88:
+    image: edge_iot_dev_sim_88
+    container_name: edge_iot_dev_sim_88
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_89:
+    image: edge_iot_dev_sim_89
+    container_name: edge_iot_dev_sim_89
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_90:
+    image: edge_iot_dev_sim_90
+    container_name: edge_iot_dev_sim_90
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_91:
+    image: edge_iot_dev_sim_91
+    container_name: edge_iot_dev_sim_91
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_92:
+    image: edge_iot_dev_sim_92
+    container_name: edge_iot_dev_sim_92
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_93:
+    image: edge_iot_dev_sim_93
+    container_name: edge_iot_dev_sim_93
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_94:
+    image: edge_iot_dev_sim_94
+    container_name: edge_iot_dev_sim_94
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_95:
+    image: edge_iot_dev_sim_95
+    container_name: edge_iot_dev_sim_95
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_96:
+    image: edge_iot_dev_sim_96
+    container_name: edge_iot_dev_sim_96
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_97:
+    image: edge_iot_dev_sim_97
+    container_name: edge_iot_dev_sim_97
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_98:
+    image: edge_iot_dev_sim_98
+    container_name: edge_iot_dev_sim_98
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_99:
+    image: edge_iot_dev_sim_99
+    container_name: edge_iot_dev_sim_99
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTDevSim_100:
+    image: edge_iot_dev_sim_100
+    container_name: edge_iot_dev_sim_100
+    build:
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+
+  edgeIoTSmartDev:
+    image: edge_iot_smart_dev
+    container_name: edge_iot_smart_dev
+    build: 
+      "./Edge/IoTSmartDev"
+    mem_limit: 1g
+  edgeSubscriber:
+    image: edge_subscriber
+    container_name: edge_subscriber
+    build: 
+      "./Edge/subscriber"
+  mongodb:
+      image: mongo:latest
+      ports:
+        - "27017:27017"
+        - "27018:27018"
+
+volumes:
+  mongo-db:

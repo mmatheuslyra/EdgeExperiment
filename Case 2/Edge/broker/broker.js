@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 // });
 
 broker.on('ready', async ()=>{
-  await mongoose.connect('mongodb://mongodb-myapp:27017/iotBroker').then(() => console.log('MongoDB Connected!')).catch(err =>{
+  await mongoose.connect('mongodb://mongodb:27017/iotBroker').then(() => console.log('MongoDB Connected!')).catch(err =>{
       console.log(err);
   });
 

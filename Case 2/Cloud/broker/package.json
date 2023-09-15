@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/mmatheuslyra/EdgeExperiment#readme",
   "dependencies": {
+    "bson-ext": "^4.0.3",
+    "mongodb": "^5.6.0",
+    "mongodb-core": "^3.2.7",
     "mongoose": "^5.11.18",
     "mosca": "^2.8.3",
     "mqtt": "^4.2.6"

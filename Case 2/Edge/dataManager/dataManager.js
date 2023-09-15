@@ -11,7 +11,7 @@ var dateFormat = require('dateformat');
 const DeviceModel = require('./Model/deviceModel');
 
 //comando brew services start mongodb-community
-mongoose.connect('mongodb://localhost:27017/iotBroker').then(() => console.log('dataManager MongoDB Connected!'))
+mongoose.connect('mongodb://mongodb:27017/iotBroker').then(() => console.log('dataManager MongoDB Connected!'))
 .catch(err => {
     console.log(Error, 'Not Connected' + err.message);
 });
@@ -87,7 +87,8 @@ publishTopic = ['Flow','Temperature','Humidity', 'Sound'];
 setInterval(()=>{
     deviceNames.forEach(device => {
       publishTopic.forEach(topic=>{
-        axios.post('http://localhost:3020') // Send message to Cloud server    ajustar endpoit da cloud
+        // axios.post('http://localhost:3020') // Send message to Cloud server    ajustar endpoit da cloud
+        axios.post('http://cloudServer:3020') // Send message to Cloud server    ajustar endpoit da cloud
           .then(response => {
             axios.get('http://localhost:3001/devices/:'+device+'/:'+topic,(req,res,next)=>{
                 DeviceModel.aggregate([{$match:{'deviceId':req.params.deviceId, 

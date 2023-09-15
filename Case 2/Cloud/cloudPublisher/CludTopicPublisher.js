@@ -6,7 +6,7 @@
 */
 var dateFormat = require('dateformat');
 var mqtt = require('mqtt')
-var client = mqtt.connect('mqtt://localhost:3010')
+var client = mqtt.connect('mqtt://cloudBroker:3010')
 var topic = 'monitoringOrder'
 var message = 'Hello World!'
 

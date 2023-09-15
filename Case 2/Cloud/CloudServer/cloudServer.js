@@ -10,9 +10,19 @@ var dateFormat = require('dateformat');
 const DeviceModel = require('./Model/deviceModel');
 
 //comando brew services start mongodb-community
-mongoose.connect('mongodb://localhost:27017/iotBroker').then(() => console.log('dataManager MongoDB Connected!'))
-.catch(err => {
-    console.log(Error, 'Not Connected' + err.message);
+// mongoose.connect('mongodb://localhost:27017/iotBroker').then(() => console.log('dataManager MongoDB Connected!'))
+// .catch(err => {
+//     console.log(Error, 'Not Connected' + err.message);
+// });
+
+// const dbConn = async ()=>{
+//     await mongoose.connect('mongodb://localhost:27017/iotBroker').then(() => console.log('MongoDB Connected!')).catch(err =>{
+//         console.log(err);
+//     });
+// };
+
+mongoose.connect('mongodb://mongodb:27017/iotBroker', { useNewUrlParser: true }).then(() => console.log('MongoDB Connected!')).catch(err =>{
+        console.log(err);
 });
 
 app.use(morgan('dev')); //log the operations through the server
@@ -22,38 +32,38 @@ app.use(cors());
 
 // All database
 app.get('/',(req,res,next)=>{
-    DeviceModel.find().lean().then(result=>{
-        res.status(200).json(result);
-    }).catch(err=>{
-        res.status(404).json(err);
-    });
+    // DeviceModel.find().lean().then(result=>{
+    //     res.status(200).json(result);
+    // }).catch(err=>{
+    //     res.status(404).json(err);
+    // });
 });
 
 // All from specific device
 app.get('/:deviceId', (req, res, next)=>{
-    DeviceModel.find({'deviceId':req.params.deviceId}).exec().then(doc=>{
-        res.status(200).json(doc);
-    }).catch(err=>{
-        res.status(200).json({
-            message:"Data doesn't exists"
-        });
-    });
+    // DeviceModel.find({'deviceId':req.params.deviceId}).exec().then(doc=>{
+    //     res.status(200).json(doc);
+    // }).catch(err=>{
+    //     res.status(200).json({
+    //         message:"Data doesn't exists"
+    //     });
+    // });
 });
 
 // Return the avarege for an specific device and topic 
 app.get('/devices/:deviceId/:deviceParameter',(req,res,next)=>{
 
-    DeviceModel.aggregate([{$match:{'deviceId':req.params.deviceId, 
-                            'deviceParameter':req.params.deviceParameter}},
-                          {$group: {_id:null, average: {$avg: '$deviceValue'}}}
-    ]).exec().then(result=>{;
-        res.status(200).json(({deviceId:req.params.deviceId,
-                               deviceParameter: req.params.deviceParameter,
-                               dateTime:dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss"), 
-                               result}));
-    }).catch(err=>{
-        res.status(404).json(err);
-    });   
+    // DeviceModel.aggregate([{$match:{'deviceId':req.params.deviceId, 
+    //                         'deviceParameter':req.params.deviceParameter}},
+    //                       {$group: {_id:null, average: {$avg: '$deviceValue'}}}
+    // ]).exec().then(result=>{;
+    //     res.status(200).json(({deviceId:req.params.deviceId,
+    //                            deviceParameter: req.params.deviceParameter,
+    //                            dateTime:dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss"), 
+    //                            result}));
+    // }).catch(err=>{
+    //     res.status(404).json(err);
+    // });   
 });
 
 // AJUSTAR PRA OUVIR SOMENTE O ENDPONINT QUE O DATAMANEGER MANDA AS MÉDIAS
