@@ -1,10 +1,4 @@
 version: '3.7'
-networks:
-  edge:
-    driver: bridge
-  cloud:
-    driver: bridge
-
 services:
   cloudBroker:
     image: cloud_broker
@@ -13,8 +7,6 @@ services:
       "./Cloud/Broker"
     ports:
       - "3010:3010"
-    networks:
-      - cloud
   cloudClient:
     image: cloud_client
     container_name: cloud_client
@@ -22,15 +14,11 @@ services:
       "./Cloud/cloudClient"
     ports:
       - "3002:3002"
-    networks:
-      - cloud
   cloudPublisher:
     image: cloud_publisher
     container_name: cloud_publisher
     build: 
       "./Cloud/cloudPublisher"
-    networks:
-      - cloud
   cloudServer:
     image: cloud_server
     container_name: cloud_server
@@ -44,8 +32,6 @@ services:
       - mongodb
     environment:
       WAIT_HOSTS: mongodb:27017
-    networks:
-      - cloud
   edgeBroker:
     image: edge_broker
     container_name: edge_broker
@@ -53,9 +39,6 @@ services:
       "./Edge/Broker"
     ports:
       - "3005:3005"
-    networks:
-      - edge
-      - cloud
   edgeDataManager:
     image: edge_data_manager
     container_name: edge_data_manager
@@ -64,9 +47,6 @@ services:
     depends_on:
       - mongodb
       - cloudServer
-    networks:
-      - edge
-      - cloud
   edgeIoTDevSim:
     image: edge_iot_dev_sim
     container_name: edge_iot_dev_sim
@@ -75,30 +55,21 @@ services:
       "./Edge/IoTDevSim"
     blkio_config:
       weight: 300
-    networks:
-      - edge
   edgeIoTSmartDev:
     image: edge_iot_smart_dev
     container_name: edge_iot_smart_dev
     build: 
       "./Edge/IoTSmartDev"
-    networks:
-      - edge
   edgeSubscriber:
     image: edge_subscriber
     container_name: edge_subscriber
     build: 
       "./Edge/subscriber"
-    networks:
-      - edge
   mongodb:
       image: mongo:latest
       ports:
         - "27017:27017"
         - "27018:27018"
-      networks:
-        - edge
-        - cloud
 
 volumes:
   mongo-db:

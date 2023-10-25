@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emulator Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+        }
+
+        form {
+            margin: 20px;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 18px;
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        p {
+            margin: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Emulator Control</h1>
+    <form method="POST">
+        <label for="choice">Select an option:</label>
+        <select name="choice" id="choice">
+            <option value="1">Build Emulator - Build all docker containers</option>
+            <option value="2">Start Emulator - Start all containers in the background</option>
+            <option value="3">Watch Emulator - Start monitoring resource consumption</option>
+            <option value="4">Stop Emulator - Kill all the emulator docker containers</option>
+        </select>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    <p>{{ message }}</p>
+</body>
+</html>
