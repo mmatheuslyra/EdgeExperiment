@@ -1,0 +1,22 @@
+{
+  "name": "polygon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "init": "node ipfs_daemon.js",
+    "start": "./node_modules/.bin/hardhat --config hardhat.config.js --network polygon_mumbai run polygon_interact.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.18.2",
+    "ipfs-core": "^0.18.1",
+    "ipfs-http-client": "^60.0.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
+}
