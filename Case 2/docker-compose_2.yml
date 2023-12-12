@@ -1,0 +1,227 @@
+version: '3.7'
+networks:
+  edge:
+    driver: bridge
+    driver_opts:                                      #configurações de rede para a edge
+      com.docker.network.ingress_bandwidth: "1mbit"
+      com.docker.network.ingress_burst: "10kbit"
+      com.docker.network.ingress_latency: "70ms"
+      com.docker.network.egress_bandwidth: "1mbit"
+      com.docker.network.egress_burst: "10kbit"
+      com.docker.network.egress_latency: "70ms"
+  cloud:
+    driver: bridge
+    driver_opts:                                      #configurações de rede para a edge
+      com.docker.network.ingress_bandwidth: "1mbit"
+      com.docker.network.ingress_burst: "10kbit"
+      com.docker.network.ingress_latency: "70ms"
+      com.docker.network.egress_bandwidth: "1mbit"
+      com.docker.network.egress_burst: "10kbit"
+      com.docker.network.egress_latency: "70ms"
+
+services:
+  cloudBroker:
+    image: cloud_broker
+    container_name: cloud_broker
+    cpu_shares: 10
+    cpu_quota: 10000
+    cpu_percent: 10
+    build: 
+      "./Cloud/Broker"
+    ports:
+      - "3010:3010"
+    networks:
+      - cloud
+  cloudClient:
+    image: cloud_client
+    container_name: cloud_client
+    cpu_shares: 10
+    build: 
+      "./Cloud/cloudClient"
+    ports:
+      - "3002:3002"
+    networks:
+      - cloud
+  cloudPublisher:
+    image: cloud_publisher
+    container_name: cloud_publisher
+    cpu_shares: 10
+    build: 
+      "./Cloud/cloudPublisher"
+    networks:
+      - cloud
+  cloudServer:
+    image: cloud_server
+    container_name: cloud_server
+    cpu_shares: 10
+    build: 
+      "./Cloud/cloudServer"
+    ports:
+      - "3020:3020"
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+    environment:
+      WAIT_HOSTS: mongodb:27017
+    networks:
+      - cloud
+  edgeBroker:
+    image: edge_broker
+    container_name: edge_broker
+    cpu_shares: 102
+    cpus: '0.5'  # Limit the container to use 50% of one CPU core
+    mem_limit: 1g
+    build: 
+      "./Edge/Broker"
+    ports:
+      - "3005:3005"
+    networks:
+      - edge
+      - cloud
+  edgeDataManager:
+    image: edge_data_manager
+    container_name: edge_data_manager
+    cpu_shares: 10
+    build: 
+      "./Edge/DataManager"
+    depends_on:
+      - mongodb
+      - cloudServer
+    networks:
+      - edge
+      - cloud
+  edgeIoTSmartDev:
+    image: edge_iot_smart_dev
+    container_name: edge_iot_smart_dev
+    cpu_shares: 10
+    build: 
+      "./Edge/IoTSmartDev"
+    networks:
+      - edge
+
+
+
+  edgeIoTDevSim:
+    image: edge_iot_dev_sim
+    container_name: edge_iot_dev_sim
+    build: 
+      "./Edge/IoTDevSim"
+    # expose:
+      # - 4883
+      # - 8080
+      # - 8081
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+    networks:
+      - edge
+  edgeIoTDevSim2:
+    image: edge_iot_dev_sim_2
+    container_name: edge_iot_dev_sim_2
+    build: 
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+    networks:
+      - edge
+  edgeIoTDevSim3:
+    image: edge_iot_dev_sim_3
+    container_name: edge_iot_dev_sim_3
+    build: 
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+    networks:
+      - edge
+  edgeIoTDevSim4:
+    image: edge_iot_dev_sim_4
+    container_name: edge_iot_dev_sim_4
+    build: 
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+    networks:
+      - edge
+  edgeIoTDevSim5:
+    image: edge_iot_dev_sim_5
+    container_name: edge_iot_dev_sim_5
+    build: 
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+    networks:
+      - edge
+
+  edgeIoTDevSim6:
+    image: edge_iot_dev_sim_6
+    container_name: edge_iot_dev_sim_6
+    build: 
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+    networks:
+      - edge
+  edgeIoTDevSim7:
+    image: edge_iot_dev_sim_7
+    container_name: edge_iot_dev_sim_7
+    build: 
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+    networks:
+      - edge
+  edgeIoTDevSim8:
+    image: edge_iot_dev_sim_8
+    container_name: edge_iot_dev_sim_8
+    build: 
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+    networks:
+      - edge
+  edgeIoTDevSim9:
+    image: edge_iot_dev_sim_9
+    container_name: edge_iot_dev_sim_9
+    build: 
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+    networks:
+      - edge
+  edgeIoTDevSim10:
+    image: edge_iot_dev_sim_10
+    container_name: edge_iot_dev_sim_10
+    build: 
+      "./Edge/IoTDevSim"
+    mem_limit: 1gb
+    blkio_config:
+      weight: 300
+    networks:
+      - edge
+
+  edgeSubscriber:
+    image: edge_subscriber
+    container_name: edge_subscriber
+    build: 
+      "./Edge/subscriber"
+  mongodb:
+      image: mongo:latest
+      ports:
+        - "27017:27017"
+        - "27018:27018"
+      networks:
+        - edge
+        - cloud
+
+volumes:
+  mongo-db:
+  mongodb:

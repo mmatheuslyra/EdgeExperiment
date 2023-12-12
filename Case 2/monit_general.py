@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from collections import deque
 import platform
+import faulthandler; faulthandler.enable();
+import matplotlib
+matplotlib.use('TkAgg')  # Use the TkAgg backend
 
 # Initialize data containers for CPU, memory, network, and disk usage
 data_length = 50  # Set the maximum length of data
@@ -60,6 +63,10 @@ for ax in [cpu_ax, memory_ax, network_ax, disk_ax]:
     elif ax == disk_ax:
         ax.set_ylabel('Percentage (%)')
 
+# Set fixed Y-axis limits for CPU and memory subplots (adjust as needed)
+cpu_ax.set_ylim(0, 100)  # Set CPU usage Y-axis limit from 0% to 100%
+memory_ax.set_ylim(0, 100)  # Set memory usage Y-axis limit from 0% to 100%
+
 # Function to update the charts with new data
 def update(frame):
     # Collect CPU and memory usage data
@@ -84,7 +91,7 @@ def update(frame):
     network_line.set_ydata(network_data)
     disk_line.set_ydata(disk_data)
 
-    # Set y-axis limits for all subplots
+    # Set y-axis limits for all subplots (to update if needed)
     for ax in [cpu_ax, memory_ax, network_ax, disk_ax]:
         ax.relim()
         ax.autoscale_view()

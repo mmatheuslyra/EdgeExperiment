@@ -5,7 +5,7 @@
   "main": "broker.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node broker.js"
+    "start": "node --experimental-worker broker.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
     "mongodb-core": "^3.2.7",
     "mongoose": "^5.11.18",
     "mosca": "^2.8.3",
-    "mqtt": "^4.2.6"
+    "mqtt": "^4.2.6",
+    "worker-thread": "^1.1.0"
   }
 }

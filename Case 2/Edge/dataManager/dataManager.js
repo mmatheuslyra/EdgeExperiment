@@ -90,19 +90,25 @@ setInterval(()=>{
         // axios.post('http://localhost:3020') // Send message to Cloud server    ajustar endpoit da cloud
         axios.post('http://cloudServer:3020') // Send message to Cloud server    ajustar endpoit da cloud
           .then(response => {
-            // axios.get('http://localhost:3001/devices/:'+device+'/:'+topic,(req,res,next)=>{
-            //     DeviceModel.aggregate([{$match:{'deviceId':req.params.deviceId, 
-            //                             'deviceParameter':req.params.deviceParameter}},
-            //                           {$group: {_id:null, average: {$avg: '$deviceValue'}}}
-            //     ]).exec().then(result=>{;
-            //         res.status(200).json(({deviceId:req.params.deviceId,
-            //                                deviceParameter: req.params.deviceParameter,
-            //                                dateTime:dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss"), 
-            //                                result}));
-            //     }).catch(err=>{
-            //         res.status(404).json(err);
-            //     });   
-            // });
+
+            //FIXME: Ajustar pra que os valores dos graficos fiquem ok
+
+
+
+            // axios.get('http://mongodb:3001/devices/:'+device+'/:'+topic,(req,res,next)=>{  //FIXME: Isso aqui tem que ser pego no banco
+            axios.get('http://mongodb:27017/devices/:'+device+'/:'+topic,(req,res,next)=>{  //FIXME: Isso aqui tem que ser pego no banco
+                DeviceModel.aggregate([{$match:{'deviceId':req.params.deviceId, 
+                                        'deviceParameter':req.params.deviceParameter}},
+                                      {$group: {_id:null, average: {$avg: '$deviceValue'}}}
+                ]).exec().then(result=>{;
+                    res.status(200).json(({deviceId:req.params.deviceId,
+                                           deviceParameter: req.params.deviceParameter,
+                                           dateTime:dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss"), 
+                                           result}));
+                }).catch(err=>{
+                    res.status(404).json(err);
+                });   
+            });
             console.log(response.data);
           })
           .catch(error => {

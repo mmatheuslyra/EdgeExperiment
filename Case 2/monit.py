@@ -2,6 +2,9 @@ import psutil
 import matplotlib.pyplot as plt
 import time
 import docker
+import faulthandler; faulthandler.enable();
+import matplotlib
+matplotlib.use('TkAgg')  # Use the TkAgg backend
 
 # Function to get CPU usage percentage for a specific container
 def get_container_cpu_usage(container_id):

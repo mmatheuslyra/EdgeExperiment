@@ -11,7 +11,12 @@ const mysql = require('mysql');
 const db = require('./mysqlconnection');
 
 //MongoDB connection
-mongoose.connect('mongodb://localhost:27017/egdeReduce').then(() => console.log('MongoDB Connected!')).catch(err =>{
+// mongoose.connect('mongodb://localhost:27017/egdeReduce').then(() => console.log('MongoDB Connected!')).catch(err =>{
+//     console.log(err);
+// });
+
+//MongoDB connection
+mongoose.connect('mongodb://mongodb:27017/egdeReduce').then(() => console.log('MongoDB Connected!')).catch(err =>{
     console.log(err);
 });
 
@@ -40,7 +45,12 @@ app.get('/',(req,res,next)=>{
 setInterval(()=>{
   deviceNames.forEach(device => {
     publishTopic.forEach(topic=>{
+
+      //FIXME: Ajustar para a imagem do dataManeger
+
+
       axios.get('http://localhost:3001/devices/'+device+'/'+topic) // Request for the dataManeger
+      // axios.get('http://edgeDataManager:3001/devices/'+device+'/'+topic) // Request for the dataManeger
         .then(response => {
 
           const device = new DeviceModel({
