@@ -112,14 +112,26 @@ def estimate_mips(cpu_utilization_percentage):
 
 def mips():
     # Get the informed CPU utilization percentage from the user
-    cpu_utilization_percentage = float(input("Enter the informed CPU utilization percentage: "))
+    cpu_utilization_percentage = int(input("Enter the informed CPU utilization percentage: "))
 
     # Validate that the percentage is in the valid range [0, 100]
     if 0 <= cpu_utilization_percentage <= 100:
         estimated_mips = estimate_mips(cpu_utilization_percentage)
-        print(f"Estimated MIPS for your machine at {cpu_utilization_percentage}% CPU utilization: {estimated_mips:.2f}")
+        cpu_shares = calculate_cpu_shares(cpu_utilization_percentage)
+        print(f"Estimated MIPS for your machine at {cpu_utilization_percentage}% \n MIPS: {estimated_mips:.2f} cpu_shares: {cpu_shares}")
     else:
         print("Error: CPU utilization percentage should be in the range [0, 100].")
+
+
+def calculate_cpu_shares(percentage):
+    # Calculate CPU shares based on user input
+    default_shares = 1024
+
+    # Calculate CPU shares
+    shares = int((percentage * default_shares) / 100)
+
+    return shares
+ 
 
 
 if __name__ == '__main__':
@@ -137,7 +149,8 @@ if __name__ == '__main__':
         print("7. Chart Emulator Network I/O Splited - Start realtime charts from the emulator containers readings")
         print("8. CPU Load Generator (Run in a different terminal)")
         print("9. Estimated MIPS for your machine (docker shares)")
-        print("11. Exit")
+
+        print("10. Exit")
         print("------------------------------------------------------------------------------------------------")
 
         try:
@@ -164,7 +177,7 @@ if __name__ == '__main__':
             start_cpu_load_generator()
         elif choice == 9:
             mips()
-        elif choice == 11:
+        elif choice == 10:
             break
         else:
             print("Invalid choice. Please enter a valid option (1, 2, or 3).")
