@@ -3,7 +3,6 @@ const FormData = require('form-data')
 const { ethers } = require('ethers');
 const fs = require('fs');
 const path = require('path'); // Add the path module
-const { exec } = require('child_process');
 
 const API_URL = process.env.API_URL;
 const API_KEY = process.env.ACHEMY_API_KEY;
@@ -25,43 +24,6 @@ var fileContent = "";
 var cnt = 0;
 const fileName = 'gremio.txt';
 
-function readFileAndDecode(filePath) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, (err, data) => {
-      if (err) {
-        reject(`Error reading file: ${err}`);
-        return;
-      }
-
-      // Convert file contents to a human-readable format
-      const decodedData = data.toString('base64');
-
-      resolve(decodedData);
-    });
-  });
-}
-
-async function exportKey(keyName) {
-  return new Promise((resolve, reject) => {
-    const command = `ipfs key export ${keyName} -o exportedKey.key`;
-
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        reject(`Error executing command: ${error.message}`);
-        return;
-      }
-
-      if (stderr) {
-        reject(`Command error: ${stderr}`);
-        return;
-      }
-
-      const exportedKey = stdout.trim();
-      resolve(exportedKey);
-    });
-  });
-}
-
 const writeToFile = (filePath, content) => {
   return new Promise((resolve, reject) => {
       fs.writeFile(filePath, content, (err) => {
@@ -73,41 +35,6 @@ const writeToFile = (filePath, content) => {
       });
   });
 };
-
-async function publishToIpns(ipfs, cid, keyName, timeout_ms) {
-
-  //const options = { key: keyName }; 
-
-  while(true) {
-    try { 
-      //console.log(`Publishing [${cid}] to ${keyName}`);
-      console.log("\nPublishing cid: ", cid);
-      console.log("To: ", keyName);
-      const result = await ipfs.name.publish(cid, { key: keyName });
-      console.log("Published to Catalog IPNS result: ", result);
-      break;
-
-    } catch(error) {
-      console.log("Error: ",  error);
-      console.log("Error publishing to IPNS! Trying again...");
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-    }
-  }
-}
-
-async function checkIPNSKeyNameExists(ipfs, keyName) {
-  console.log("Checking if IPNS key exists...");
-  try {
-    const keys = await ipfs.key.list();
-    const keyExists = keys.some((key) => key.name === keyName);
-
-    return keyExists;
-  } catch (error) {
-    // An error occurred while retrieving the keys, which indicates
-    // that the key does not exist.
-    return false;
-  }
-}
 
 async function update_sc() {
   const formData = new FormData();
@@ -162,41 +89,9 @@ async function update_sc() {
   console.log("Finishing process...");
 }
 
-async function testIpns(ipfs, cid) {
-  const catalogKeyName = 'PublicFarmMenuList'; //ipns key name para onde a lista de farms será armazenada
-
-  var key = "";
-  const keyExists = await checkIPNSKeyNameExists(ipfs, catalogKeyName);
-
-  if(keyExists == false) {
-    console.log("Generating a new IPNS public key for CSC...");
-    key = await ipfs.key.gen(catalogKeyName, { type: 'rsa', size: 2048 }); //gera a chave
-  } else{
-    const keys = await ipfs.key.list();
-    key = keys.find((k) => k.name === catalogKeyName); //procura a chave, caso ela exista
-  }
-
-  await publishToIpns(ipfs, cid, catalogKeyName, 30000);
-
-  await exportKey(catalogKeyName);
-  const tmpPath = 'exportedKey.key';
-  const exportedKey = await readFileAndDecode(tmpPath);
-  console.log("Exported Key: ", exportedKey);
-}
-
 async function runSequentialUpdates() {
-  const { create } = await import('ipfs-http-client');
-  const ipfs = await create({ url: 'http://127.0.0.1:5001'});
-
-  await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait for 5 seconds
-
-  await testIpns(ipfs, "QmZyU27x7ByFhJCVGBKR73ZRFt7HaL6GXZWuDEuWLBYAAE");
-
   while (true) {
-    // await update_sc();
-    // await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait for 10 seconds
-
-    console.log("Hello...");
+    await update_sc();
     await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait for 10 seconds
   }
 }
