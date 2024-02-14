@@ -14,17 +14,33 @@ const provider = new ethers.providers.JsonRpcProvider(API_URL);
 const signer = new ethers.Wallet(PRIVATE_KEY, provider);
 const catalogContract = new ethers.Contract(CATALOG_CONTRACT_ADDRESS, abi, signer);
 
-async function catIpfs(ipfs, cid) {
-    const data = ipfs.cat(cid);
-    const metadata_chunks = []
-    for await (const chunk of data) {
-        metadata_chunks.push(chunk)
-    }
-    const contentString = Buffer.concat(metadata_chunks).toString();
-    
-    return contentString;
-}
+const REQUESTED_DEVICE_ID = '0';
 
+async function catIpfs(ipfs, cid) {
+    var data = '';
+    var metadata_chunks;
+    var contentString = '';
+    
+    while(true) {
+      try { 
+        console.log("Fetching content from CID: ", cid);
+        
+        data = ipfs.cat(cid);
+        metadata_chunks = []
+        for await (const chunk of data) {
+            metadata_chunks.push(chunk)
+        }
+        contentString = Buffer.concat(metadata_chunks).toString();
+  
+        return contentString;
+      } catch(error) {
+        console.log("Error: ",  error);
+        console.log("Error trying to fetch IPFS data again...");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    }
+}
+  
 async function getRandomFarm(farmList) {
     // Get a random index within the range of the farmList length
     const randomIndex = Math.floor(Math.random() * farmList.length);
@@ -98,7 +114,6 @@ async function main() {
     let totalElapsedTime = 7840035.508;
     let bestTime = 10000000000;
     let worstTime = 0;
-    let deviceN = 1;
 
     console.log("IPNS Name: ", ipnsName);
 
@@ -111,7 +126,7 @@ async function main() {
     
             outputCid = previousCid;
     
-            const device_requested = deviceN.toString();
+            const device_requested = REQUESTED_DEVICE_ID;
             
             const startTime = process.hrtime();
     
@@ -192,36 +207,6 @@ async function main() {
                     console.log('Data appended to the CSV file.');
                 });
     
-                // if(deviceLastDataList[0] == device_requested)  {
-                //     // let hash = deviceLastDataList[5];
-                //     // let cont = 1;
-                //     // console.log("Last hash: ", hash);
-    
-                //     // while(hash != "-1") {
-                //     //     const ipfs_content = ipfs.cat(hash);
-                //     //     const chunks = []
-                //     //     for await (const chunk of ipfs_content) {
-                //     //         chunks.push(chunk)
-                //     //     }
-    
-                //     //     const contentString = Buffer.concat(chunks).toString()
-                //     //     console.log("%d IPFS Content: ", cont, contentString);
-    
-                //     //     const contentSplit = contentString.split(';');
-    
-                //     //     cont += 1;
-                //     //     hash = contentSplit[5];
-                //     // }
-                    
-                //     break;
-    
-                // } else {
-                //     console.log(`Got: ${deviceLastDataList[0]} --- Wanted: ${device_requested}`);
-                //     console.log("Asking again...\n");
-                //     process.exit();
-                //     previousCid = outputCid;
-                // }
-            
                 await new Promise((resolve) => setTimeout(resolve, 1000*60*7));
             }
     

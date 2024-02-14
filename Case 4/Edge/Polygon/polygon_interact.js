@@ -94,12 +94,14 @@ async function deployContract() {
 
 async function checkPrivateCatalog(ipfs) {
 
-  gtwContractAddress = await getLastScAddress();
-  if(gtwContractAddress == '') {
-    gtwContractAddress = await deployContract();
-  } else {
-    gtwCatalogContract = await new ethers.Contract(gtwContractAddress, privContractAbi, privateProvider);
-  }
+  // gtwContractAddress = await getLastScAddress();
+  // if(gtwContractAddress == '') {
+  //   gtwContractAddress = await deployContract();
+  // } else {
+  //   gtwCatalogContract = await new ethers.Contract(gtwContractAddress, privContractAbi, privateProvider);
+  // }
+
+  gtwContractAddress = await deployContract();
 
   var privateKeyCid = await gtwCatalogContract.privateKeyCid();
   console.log("PrivateKey: ", privateKeyCid);
@@ -117,7 +119,7 @@ async function checkPrivateCatalog(ipfs) {
       key = await ipfs.key.gen(privateScIpnsSk, { type: 'rsa', size: 2048 });
     } else{
       const keys = await ipfs.key.list();
-      key = keys.find((k) => k.name === privateScIpnsSk);
+      key = await keys.find((k) => k.name === privateScIpnsSk);
     }
 
     //const exportedKey = await ipfs.key.export(privateScIpnsSk);
@@ -135,7 +137,7 @@ async function checkPrivateCatalog(ipfs) {
     var ipfs_cid = await addIpfsFile("-1;-1;-1;-1;-1;-1");
   
     //populate this IPNS key
-    await publishToIpns(ipfs, ipfs_cid, privateScIpnsSk, 30000);
+    await publishToIpns(ipfs, ipfs_cid, privateScIpnsSk, 1000*30); //15s of timeout
 
     tx = await gtwCatalogContract.setCatalogIpnsKey(key.id);
     await tx.wait();
@@ -154,7 +156,7 @@ async function checkPrivateCatalog(ipfs) {
       key = await ipfs.key.gen(outputIpnsKey, { type: 'rsa', size: 2048 });
     } else{
       const keys = await ipfs.key.list();
-      key = keys.find((k) => k.name === outputIpnsKey);
+      key = await keys.find((k) => k.name === outputIpnsKey);
     }
 
     tx = await gtwCatalogContract.setOuputIpnsKey(key.id);
@@ -219,25 +221,61 @@ const writeToFile = (filePath, content) => {
   });
 };
 
-async function updaIpfsList(ipfs, hash) {
+async function updaIpfsList(hash) {
   const currentTimestamp = moment().format('YYYY-MM-DD HH:mm:ss:SSS');
   const metadata = currentTimestamp + ';' + hash;
   
+  console.log("Metadata that will be transmitted: ", metadata);
   const ipfs_cid = await addIpfsFile(metadata);
 
   return (ipfs_cid);
 }
 
-async function catIpfs(ipfs, cid) {
-  const data = ipfs.cat(cid);
-  const metadata_chunks = []
-  for await (const chunk of data) {
-      metadata_chunks.push(chunk)
+async function catIpfsGateway(cid) {
+  try {
+    const response = await axios.get(`https://ipfs.io/ipfs/${cid}`);
+    //console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
   }
-  const contentString = Buffer.concat(metadata_chunks).toString()
-  
-  return (contentString);
 }
+
+async function catIpfs(ipfs, cid) {
+  var data = '';
+  var metadata_chunks;
+  var contentString = '';
+  
+  while(true) {
+    try { 
+      console.log("Fetching content from CID: ", cid);
+      
+      data = ipfs.cat(cid);
+      metadata_chunks = []
+      for await (const chunk of data) {
+          metadata_chunks.push(chunk)
+      }
+      contentString = Buffer.concat(metadata_chunks).toString();
+
+      return contentString;
+    } catch(error) {
+      console.log("Error: ",  error);
+      console.log("Error trying to fetch IPFS data again...");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+}
+
+// async function catIpfs(ipfs, cid) {
+//   const data = ipfs.cat(cid);
+//   const metadata_chunks = []
+//   for await (const chunk of data) {
+//       metadata_chunks.push(chunk)
+//   }
+//   const contentString = Buffer.concat(metadata_chunks).toString()
+  
+//   return (contentString);
+// }
 
 async function generateNodeIpnsKey(ipfs, deviceID) {
   var keyExists = false;
@@ -254,7 +292,7 @@ async function generateNodeIpnsKey(ipfs, deviceID) {
     key = await ipfs.key.gen(nodeIpnsKey, { type: 'rsa', size: 2048 });
   } else{
     const keys = await ipfs.key.list();
-    key = keys.find((k) => k.name === nodeIpnsKey);
+    key = await keys.find((k) => k.name === nodeIpnsKey);
   }
 
   var ipfs_cid = await addIpfsFile("-1;-1;-1;-1;-1;-1");
@@ -262,7 +300,7 @@ async function generateNodeIpnsKey(ipfs, deviceID) {
   console.log("IPFS CID: ", ipfs_cid);
 
   //populate its dataset IPNS key
-  await publishToIpns(ipfs, ipfs_cid, nodeIpnsKey, 30000);
+  await publishToIpns(ipfs, ipfs_cid, nodeIpnsKey, 1000*30); //15s of timeout
 
   //publishes its dataset IPNS key to catalog IPNS key
   const catalogIpnsKey = await gtwCatalogContract.catalogIpnsKey(); 
@@ -339,6 +377,7 @@ async function getLastIpfsCid(ipfs, deviceID) {
 
   var contentString = "";
 
+  console.log("Searching for deviceID: ", deviceID);
   while(contentString != "-1;-1;-1;-1;-1;-1") {
     contentString = await catIpfs(ipfs, cid);
     console.log("IPFS output: ", contentString);
@@ -366,18 +405,31 @@ async function getLastIpfsCid(ipfs, deviceID) {
 }
 
 async function publishToIpns(ipfs, cid, keyName, timeout_ms) {
-
-  //const options = { key: keyName }; 
+  // Create a promise that resolves after the specified timeout
+  const timeoutPromise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ timeout: true });
+    }, timeout_ms);
+  });
 
   while(true) {
     try { 
-      //console.log(`Publishing [${cid}] to ${keyName}`);
       console.log("\nPublishing cid: ", cid);
       console.log("To: ", keyName);
-      const result = await ipfs.name.publish(cid, { key: keyName });
+      
+      // Race between the ipfs.name.publish function and the timeout promise
+      const result = await Promise.race([
+        ipfs.name.publish(cid, { key: keyName }),
+        timeoutPromise
+      ]);
+
+      // Check if the result indicates a timeout
+      if (result && result.timeout) {
+        throw new Error('Publishing to IPNS timed out');
+      }
+      
       console.log("Published to Catalog IPNS result: ", result);
       break;
-
     } catch(error) {
       console.log("Error: ",  error);
       console.log("Error publishing to IPNS! Trying again...");
@@ -386,11 +438,32 @@ async function publishToIpns(ipfs, cid, keyName, timeout_ms) {
   }
 }
 
+// async function publishToIpns(ipfs, cid, keyName, timeout_ms) {
+
+//   //const options = { key: keyName }; 
+
+//   while(true) {
+//     try { 
+//       //console.log(`Publishing [${cid}] to ${keyName}`);
+//       console.log("\nPublishing cid: ", cid);
+//       console.log("To: ", keyName);
+//       const result = await ipfs.name.publish(cid, { key: keyName }, {timeout: timeout_ms});
+//       console.log("Published to Catalog IPNS result: ", result);
+//       break;
+
+//     } catch(error) {
+//       console.log("Error: ",  error);
+//       console.log("Error publishing to IPNS! Trying again...");
+//       await new Promise((resolve) => setTimeout(resolve, 3000));
+//     }
+//   }
+// }
+
 async function checkIPNSKeyNameExists(ipfs, keyName) {
   console.log("Checking if IPNS key exists...");
   try {
     const keys = await ipfs.key.list();
-    const keyExists = keys.some((key) => key.name === keyName);
+    const keyExists = await keys.some((key) => key.name === keyName);
 
     return keyExists;
   } catch (error) {
@@ -520,23 +593,25 @@ async function importFarmMenuIpnsKeyName(ipfs) {
 
   console.log("Secret key CID: ", secretKeyCid);
 
-  const data = ipfs.cat(secretKeyCid);
-  const metadata_chunks = []
-  for await (const chunk of data) {
-      metadata_chunks.push(chunk)
-  }
+  // const data = ipfs.cat(secretKeyCid);
+  // const metadata_chunks = []
+  // for await (const chunk of data) {
+  //     metadata_chunks.push(chunk)
+  // }
   
-  const exportedKey = Buffer.concat(metadata_chunks).toString()
-  console.log("Key exported...");
+  // const exportedKey = Buffer.concat(metadata_chunks).toString()
+  const exportedKey = await catIpfs(ipfs, secretKeyCid);
+  // const exportedKey = await catIpfsGateway(secretKeyCid);
+  console.log("Key exported: ", exportedKey);
 
   const clone = "FarmMenuListSecretKey_Farm" + FARM_ID;
-  console.log("Checking if keye exist ...");
+  console.log("Checking if key exist ...");
   keyExists = await checkIPNSKeyNameExists(ipfs, clone);
 
   if(keyExists == false) {
     //const key = await ipfs.key.import(clone, exportedKey, '123456');
     const keyFile = clone;
-    console.log("Creating key file...");
+    console.log("Creating key file: ", keyFile);
     await createKeyFile(exportedKey, `${keyFile}.key`);
     console.log("Importing key...");
     const key = await importKey(clone, keyFile);
@@ -610,7 +685,7 @@ async function generateFarmIpnsKey(ipfs) {
   const ipfs_cid = await addIpfsFile("-1;-1;-1;-1;-1;-1");
 
   //populate this IPNS key
-  await publishToIpns(ipfs, ipfs_cid, farmIpnsKey, 30000);
+  await publishToIpns(ipfs, ipfs_cid, farmIpnsKey, 1000*30); //15s of timeout
 
   return key.id; //retorna o ID da chave onde vai ser enviado o conteúdo dessa farm
 }
@@ -631,18 +706,19 @@ async function checkPublicCatalog(ipfs) {
         console.log("Generating a new IPNS public key for CSC...");
         key = await ipfs.key.gen(catalogKeyName, { type: 'rsa', size: 2048 }); //gera a chave
       } else{
+        console.log("IPNS Key Already Exist!");
         const keys = await ipfs.key.list();
-        key = keys.find((k) => k.name === catalogKeyName); //procura a chave, caso ela exista
+        key = await keys.find((k) => k.name === catalogKeyName); //procura a chave, caso ela exista
       }
     
       var ipfs_cid = await addIpfsFile("-1;-1;-1;-1;-1;-1");
     
       //populate this IPNS key with a first value
-      await publishToIpns(ipfs, ipfs_cid, catalogKeyName, 30000);
+      await publishToIpns(ipfs, ipfs_cid, catalogKeyName, 1000*30); //15s of timeout
 
       farmMenuListIpnsKey = key.id;
 
-      console.log("Sending key IPNS Public key to Catalog SC: ", key.id);
+      console.log(`Sending key ${catalogKeyName} key to Catalog SC: ${key.id}`);
       var tx = await catalogContract.setFarmMenuListIpnsKey(key.id); //manda a chave gerada para o SC
       await tx.wait();
       console.log("Transaction done!");
@@ -788,43 +864,45 @@ async function node_fsm() {
   let isHandlingEvent = false; // Flag to indicate if handleEvent is running
   let isGeneratingMetadata = false; // Flag to indicate if generateMetadataAndProcess is running
 
-  await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait for 5 seconds
+  await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait for 10 seconds
 
   await checkPublicCatalog(ipfs);
-
   await checkPrivateCatalog(ipfs);
 
   console.log("Everything ready!");
   var ipfs_cid = '';
 
   const handleEvent = async (info) => {
-    isHandlingEvent = true; // Set the flag to true while handleEvent is running
-    console.log("Event received:", info);
-    
-    // Continue with other actions based on the event
-    if(info.eventName == "DataDeviceRequested") {
-      console.log("Searching for Device: ", info.deviceID);
-      const lastCid = await getLastIpfsCid(ipfs, info.deviceID);
-      const txCid = await updaIpfsList(lastCid);
-
-      console.log("CID that will be sent: ", txCid);
-
-      const farmIpnsKey = "Farm" + FARM_ID + 'IpnsKey';
-      //send data to output IPNS key of FarmMenu
-      await publishToIpns(ipfs, txCid, farmIpnsKey, 30000);
-
-    } else if(info.eventName == "FarmDataRequested") {
-      console.log("FarmDataRequested!");
+    if(!isHandlingEvent && !isGeneratingMetadata) {
+      isHandlingEvent = true; // Set the flag to true while handleEvent is running
+      console.log("\n\nEvent received:", info);
       
-      //catalogIpnsKey
-      const ipnsPk = await gtwCatalogContract.catalogIpnsKey();
-      console.log("PK that will be sent: ", ipnsPk);
+      // Continue with other actions based on the event
+      if(info.eventName == "DataDeviceRequested") {
+        console.log("Searching for Device: ", info.deviceID);
+        const lastCid = await getLastIpfsCid(ipfs, info.deviceID);
+        const txCid = await updaIpfsList(lastCid);
 
-      ipfs_cid = await addIpfsFile(ipnsPk);
+        console.log("CID that will be sent: ", txCid);
 
-      const farmIpnsKey = "Farm" + FARM_ID + 'IpnsKey';
-      //send data to output IPNS key of FarmMenu
-      await publishToIpns(ipfs, ipfs_cid, farmIpnsKey, 30000);
+        const farmIpnsKey = "Farm" + FARM_ID + 'IpnsKey';
+        //send data to output IPNS key of FarmMenu
+        await publishToIpns(ipfs, txCid, farmIpnsKey, 1000*30); //15s of timeout
+
+      } else if(info.eventName == "FarmDataRequested") {
+        console.log("FarmDataRequested!");
+        
+        //catalogIpnsKey
+        const ipnsPk = await gtwCatalogContract.catalogIpnsKey();
+        console.log("PK that will be sent: ", ipnsPk);
+
+        ipfs_cid = await addIpfsFile(ipnsPk);
+
+        const farmIpnsKey = "Farm" + FARM_ID + 'IpnsKey';
+        //send data to output IPNS key of FarmMenu
+        await publishToIpns(ipfs, ipfs_cid, farmIpnsKey, 1000*30); //15s of timeout  
+      }
+    
     }
 
     isHandlingEvent = false; // Set the flag back to false after handleEvent finishes
@@ -868,7 +946,7 @@ async function node_fsm() {
         console.log("Next value: ", data);
         const ipfs_cid = await addIpfsFile(data);
       
-        await publishToIpns(ipfs, ipfs_cid, nodeIpnsKey, 5000);
+        await publishToIpns(ipfs, ipfs_cid, nodeIpnsKey, 30*1000);
       } catch (error) {
         console.error("Error occurred while generating metadata:", error);
         // Handle the error accordingly
